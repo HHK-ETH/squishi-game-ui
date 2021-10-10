@@ -50,15 +50,15 @@ export function Home(): JSX.Element {
     }
 
     return (
-        <div className={"bg-black pt-48 pb-96 text-center text-white font-squid"}>
-            <h1 className={"text-3xl mb-2"}>Welcome to the Squishi Game</h1>
+        <div className={"bg-black pt-48 pb-96 text-center text-white"}>
+            <h1 className={"text-3xl mb-2 font-squid"}>Welcome to the Squishi Game</h1>
             <h2>The game ends in: {gameData.hoursLeft.toFixed(2)} hours</h2>
             <h2>Total pot: {formatUnits(gameData.pot)} SUSHI</h2>
             <h2>Amount of players: {gameData.playerAmount.toString()}</h2>
 
             {!joined && 
             <div className={"border-2 inline-block p-8 mt-4"}>
-                <h1 className={"text-xl"}>WANNA JOIN THE GAME ANON ?</h1>
+                <h1 className={"text-xl font-squid"}>WANNA JOIN THE GAME ANON ?</h1>
                 <p>You need to approve the contract and 4 SUSHI to play.</p>
                 <button className={"mt-2 mx-2 p-4 border-2 inline-block"} onClick={e => {
                     async function approve() {

@@ -50,7 +50,7 @@ export function PlayerList({players, squishiGameContract, account, setGameData}:
                                             {formatUnits(player.health)}
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap">
-                                            <button onClick={e => {
+                                            <button className={"mr-2"} onClick={e => {
                                                 async function execHit() {
                                                     const tx = await hit(squishiGameContract, account, address);
                                                     if (tx) {
@@ -60,7 +60,6 @@ export function PlayerList({players, squishiGameContract, account, setGameData}:
                                                 }
                                                 execHit();
                                                 }}>Attack</button>
-                                             -- 
                                             <button onClick={e => {
                                                 async function execHeal() {
                                                     const tx = await heal(squishiGameContract, account, address);
