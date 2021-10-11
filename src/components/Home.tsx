@@ -59,14 +59,14 @@ export function Home(): JSX.Element {
             {!joined && 
             <div className={"border-2 inline-block p-8 mt-4"}>
                 <h1 className={"text-xl font-squid"}>WANNA JOIN THE GAME ANON ?</h1>
-                <p>You need to approve the contract and 4 SUSHI to play.</p>
+                <p>You need to approve the contract and 3 SUSHI to play.</p>
                 <button className={"mt-2 mx-2 p-4 border-2 inline-block"} onClick={e => {
                     async function approve() {
                         if (connector === undefined) return;
                         const token = new Contract(SUSHI_ERC20_ADDR, SUSHI_ERC20_ABI);
                         const web3Provider = new providers.Web3Provider(await connector.getProvider());
                         const tokenWithSigner = token.connect(web3Provider.getSigner())
-                        await tokenWithSigner.approve(SQUISHI_GAME_ADDR, 4 * (10 *18));
+                        await tokenWithSigner.approve(SQUISHI_GAME_ADDR, 3 * (10 *18));
                     }
                     approve();
                 }}>Approve</button>
