@@ -41,8 +41,8 @@ export function Home(): JSX.Element {
     if (!active || chainId !== 137 || account === undefined || account === null) {
         return (
             <>
-                <div className={"bg-black py-96 text-center text-white font-squid"}>
-                    <h1 className={"text-3xl"}>Connect your wallet and switch to Polygon network</h1>
+                <div className={"bg-black py-96 text-center text-white"}>
+                    <h1 className={"text-3xl font-squid"}>Connect your wallet and switch to Polygon network</h1>
                     <Wallet/>
                 </div>
             </>
