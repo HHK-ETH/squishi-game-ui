@@ -12,7 +12,8 @@ export async function fetchPlayersWithHealth(squishiGame: Contract, addresses: s
     return Promise.all(addresses.map(async (address) => {
         return {
             address: address,
-            health: await squishiGame.balanceOf(address)
+            health: await squishiGame.balanceOf(address),
+            nextAction: parseInt(await squishiGame.lastActionTimestamp(address)) + 3600 - (new Date().getTime() / 1000)
         };
     }));
 }
@@ -33,7 +34,7 @@ export async function hit(squishiGame: Contract, account: string, target: string
         alert("You or target player is dead or did not join the game.");
         return null;
     }
-    if (await squishiGame.lastActionTimestamp(account) + 3600 > new Date().getTime() / 1000) {
+    if (parseInt(await squishiGame.lastActionTimestamp(account)) + 3600 > (new Date().getTime() / 1000)) {
         alert("You need to rest.");
         return null;
     }
@@ -48,7 +49,7 @@ export async function heal(squishiGame: Contract, account: string, target: strin
         alert("Already full healed.");
         return null;
     }
-    if (await squishiGame.lastActionTimestamp(account) + 3600 > new Date().getTime() / 1000) {
+    if (parseInt(await squishiGame.lastActionTimestamp(account)) + 3600 > (new Date().getTime() / 1000)) {
         alert("You need to rest.");
         return null;
     }

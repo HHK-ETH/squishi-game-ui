@@ -28,6 +28,12 @@ export function PlayerList({players, squishiGameContract, account, fetchContract
                                 scope="col"
                                 className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                             >
+                                Next action in
+                            </th>
+                            <th
+                                scope="col"
+                                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                            >
                                 Action
                             </th>
                         </tr>
@@ -36,7 +42,9 @@ export function PlayerList({players, squishiGameContract, account, fetchContract
                         {
                             players.map((player) => {
                                 let address = player.address;
-                                if (address === account) address = address+' (you)'
+                                if (address === account) address = address+' (you)';
+                                let nextAction: any = player.nextAction / 60;
+                                if (nextAction < 0) nextAction = 0;
                                 return (
                                     <tr key={address}>
                                         <td className="px-6 py-4 whitespace-nowrap">
@@ -44,6 +52,9 @@ export function PlayerList({players, squishiGameContract, account, fetchContract
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap">
                                             {formatUnits(player.health)}
+                                        </td>
+                                        <td className="px-6 py-4 whitespace-nowrap">
+                                            {nextAction > 0 ? nextAction.toFixed(2)+' min' : "Now"}
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap">
                                             <button className={"mr-2"} onClick={e => {
