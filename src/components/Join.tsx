@@ -3,7 +3,7 @@ import { Web3Provider } from "@ethersproject/providers";
 import { Contract, providers } from "ethers";
 import { SQUISHI_GAME_ADDR, SUSHI_ERC20_ABI, SUSHI_ERC20_ADDR } from "../constant";
 
-export function Join({squishiGameContract, fetchContract}: {squishiGameContract: Contract, fetchContract: Function}): JSX.Element {
+export function Join({squishiGameContract, fetchContract, setLoading}: {squishiGameContract: Contract, fetchContract: Function, setLoading: Function}): JSX.Element {
     const context = useWeb3React<Web3Provider>();
     const {connector, library, chainId, account, activate, deactivate, active, error} = context;
     
@@ -21,7 +21,10 @@ export function Join({squishiGameContract, fetchContract}: {squishiGameContract:
                 await connector.getProvider()
               );
               const tokenWithSigner = token.connect(web3Provider.getSigner());
-              await tokenWithSigner.approve(SQUISHI_GAME_ADDR, 3 * (10 * 18));
+              const tx = await tokenWithSigner.approve(SQUISHI_GAME_ADDR, 3 * (10 * 18));
+              setLoading('Approving...')
+              await web3Provider.waitForTransaction(tx.hash, 1);
+              setLoading('')
             }
             approve();
           }}
@@ -34,7 +37,9 @@ export function Join({squishiGameContract, fetchContract}: {squishiGameContract:
             async function join() {
               const tx = await squishiGameContract.join();
               if (tx) {
+                setLoading('Joining the game...');
                 await squishiGameContract.provider.waitForTransaction(tx.hash, 1);
+                setLoading('');
                 await fetchContract();
               }
             }

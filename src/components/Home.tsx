@@ -21,11 +21,13 @@ export function Home(): JSX.Element {
     });
     const [squishiGameContract, setsquishiGameContract] = useState(new Contract(SQUISHI_GAME_ADDR, SQUISHI_GAME_ABI));
     const [joined, setJoined] = useState(true);
+    const [loading, setLoading] = useState('');
 
     async function fetchContract() {
         if (!active || chainId !== 137 || connector === undefined) {
             return;
         }
+        setLoading('Fetching contract data...');
         const web3Provider = new providers.Web3Provider(await connector.getProvider());
         const contract = new Contract(SQUISHI_GAME_ADDR, SQUISHI_GAME_ABI, web3Provider);
         const contractWithSigner = contract.connect(web3Provider.getSigner());
@@ -34,11 +36,12 @@ export function Home(): JSX.Element {
         if (!(await contractWithSigner.rip(account)) && !(await contractWithSigner.isAlive(account))) {
             setJoined(false);
         }
+        setLoading('');
     }
 
     useEffect(() => {
         fetchContract();
-    }, [active, chainId, connector]);
+    }, [active, chainId, connector, account]);
 
     if (!active || chainId !== 137 || account === undefined || account === null) {
         return (
@@ -54,13 +57,16 @@ export function Home(): JSX.Element {
     return (
         <div className={"bg-black pt-48 pb-96 text-center text-white"}>
             <h1 className={"text-3xl mb-2 font-squid"}>Welcome to the Squishi Game</h1>
+            {loading.length > 0 && 
+                <span className="animate-ping">{loading}</span>
+            }
             <h2>The game ends in: {gameData.hoursLeft.toFixed(2)} hours</h2>
             <h2>Total pot: {formatUnits(gameData.pot)} SUSHI</h2>
             <h2>Amount of players: {gameData.playerAmount.toString()}</h2>
 
-            {!joined && <Join squishiGameContract={squishiGameContract} fetchContract={fetchContract} />}
+            {!joined && <Join squishiGameContract={squishiGameContract} fetchContract={fetchContract} setLoading={setLoading} />}
 
-            <PlayerList players={gameData.players} squishiGameContract={squishiGameContract} account={account} fetchContract={fetchContract} />
+            <PlayerList players={gameData.players} squishiGameContract={squishiGameContract} account={account} fetchContract={fetchContract} setLoading={setLoading} />
         </div>
     )
 }

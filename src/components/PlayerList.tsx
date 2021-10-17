@@ -2,7 +2,7 @@ import { Contract } from "@ethersproject/contracts"
 import { formatUnits } from "@ethersproject/units"
 import { hit, heal, fetchSquishiGameData } from "../web3Helper"
 
-export function PlayerList({players, squishiGameContract, account, fetchContract}: {players: any[], squishiGameContract: Contract, account: string, fetchContract: Function}): JSX.Element {
+export function PlayerList({players, squishiGameContract, account, fetchContract, setLoading}: {players: any[], squishiGameContract: Contract, account: string, fetchContract: Function, setLoading: Function}): JSX.Element {
 
     return (
         <div className="flex flex-col mx-24 mt-4">
@@ -61,7 +61,9 @@ export function PlayerList({players, squishiGameContract, account, fetchContract
                                                 async function execHit() {
                                                     const tx = await hit(squishiGameContract, account, address);
                                                     if (tx) {
+                                                        setLoading('Hiting the target...');
                                                         await squishiGameContract.provider.waitForTransaction(tx.hash, 1);
+                                                        setLoading('');
                                                         await fetchContract();
                                                     }
                                                 }
@@ -71,7 +73,9 @@ export function PlayerList({players, squishiGameContract, account, fetchContract
                                                 async function execHeal() {
                                                     const tx = await heal(squishiGameContract, account, address);
                                                     if (tx) {
+                                                        setLoading('Healing the target...');
                                                         await squishiGameContract.provider.waitForTransaction(tx.hash, 1);
+                                                        setLoading('');
                                                         await fetchContract();
                                                     }
                                                 }
