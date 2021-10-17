@@ -2,11 +2,7 @@ import { Contract } from "@ethersproject/contracts"
 import { formatUnits } from "@ethersproject/units"
 import { hit, heal, fetchSquishiGameData } from "../web3Helper"
 
-export function PlayerList({players, squishiGameContract, account, setGameData}: {players: any[], squishiGameContract: Contract, account: string, setGameData: Function}): JSX.Element {
-
-    async function update() {
-        setGameData(await fetchSquishiGameData(squishiGameContract));
-    }
+export function PlayerList({players, squishiGameContract, account, fetchContract}: {players: any[], squishiGameContract: Contract, account: string, fetchContract: Function}): JSX.Element {
 
     return (
         <div className="flex flex-col mx-24 mt-4">
@@ -55,7 +51,7 @@ export function PlayerList({players, squishiGameContract, account, setGameData}:
                                                     const tx = await hit(squishiGameContract, account, address);
                                                     if (tx) {
                                                         await squishiGameContract.provider.waitForTransaction(tx.hash, 1);
-                                                        await update();
+                                                        await fetchContract();
                                                     }
                                                 }
                                                 execHit();
@@ -65,7 +61,7 @@ export function PlayerList({players, squishiGameContract, account, setGameData}:
                                                     const tx = await heal(squishiGameContract, account, address);
                                                     if (tx) {
                                                         await squishiGameContract.provider.waitForTransaction(tx.hash, 1);
-                                                        await update();
+                                                        await fetchContract();
                                                     }
                                                 }
                                                 execHeal();
