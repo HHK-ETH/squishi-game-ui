@@ -21,7 +21,7 @@
   },
   "scripts": {
     "start": "craco start",
-    "build": "craco build"
+    "build": "CI= yarn craco build"
   },
   "eslintConfig": {
     "extends": [
