@@ -2,11 +2,7 @@ import { Contract } from "@ethersproject/contracts"
 import { formatUnits } from "@ethersproject/units"
 import { hit, heal, fetchSquishiGameData } from "../web3Helper"
 
-export function PlayerList({players, squishiGameContract, account, setGameData}: {players: any[], squishiGameContract: Contract, account: string, setGameData: Function}): JSX.Element {
-
-    async function update() {
-        setGameData(await fetchSquishiGameData(squishiGameContract));
-    }
+export function PlayerList({players, squishiGameContract, account, fetchContract, setLoading}: {players: any[], squishiGameContract: Contract, account: string, fetchContract: Function, setLoading: Function}): JSX.Element {
 
     return (
         <div className="flex flex-col mx-24 mt-4">
@@ -32,6 +28,12 @@ export function PlayerList({players, squishiGameContract, account, setGameData}:
                                 scope="col"
                                 className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                             >
+                                Next action in
+                            </th>
+                            <th
+                                scope="col"
+                                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                            >
                                 Action
                             </th>
                         </tr>
@@ -40,7 +42,9 @@ export function PlayerList({players, squishiGameContract, account, setGameData}:
                         {
                             players.map((player) => {
                                 let address = player.address;
-                                if (address === account) address = address+' (you)'
+                                if (address === account) address = address+' (you)';
+                                let nextAction: any = player.nextAction / 60;
+                                if (nextAction < 0) nextAction = 0;
                                 return (
                                     <tr key={address}>
                                         <td className="px-6 py-4 whitespace-nowrap">
@@ -50,12 +54,17 @@ export function PlayerList({players, squishiGameContract, account, setGameData}:
                                             {formatUnits(player.health)}
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap">
+                                            {nextAction > 0 ? nextAction.toFixed(2)+' min' : "Now"}
+                                        </td>
+                                        <td className="px-6 py-4 whitespace-nowrap">
                                             <button className={"mr-2"} onClick={e => {
                                                 async function execHit() {
                                                     const tx = await hit(squishiGameContract, account, address);
                                                     if (tx) {
+                                                        setLoading('Hiting the target...');
                                                         await squishiGameContract.provider.waitForTransaction(tx.hash, 1);
-                                                        await update();
+                                                        setLoading('');
+                                                        await fetchContract();
                                                     }
                                                 }
                                                 execHit();
@@ -64,8 +73,10 @@ export function PlayerList({players, squishiGameContract, account, setGameData}:
                                                 async function execHeal() {
                                                     const tx = await heal(squishiGameContract, account, address);
                                                     if (tx) {
+                                                        setLoading('Healing the target...');
                                                         await squishiGameContract.provider.waitForTransaction(tx.hash, 1);
-                                                        await update();
+                                                        setLoading('');
+                                                        await fetchContract();
                                                     }
                                                 }
                                                 execHeal();

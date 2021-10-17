@@ -4,9 +4,9 @@ import squidEmoji from "./../images/squid.png";
 export function Welcome(): JSX.Element {
 
     return (
-        <div className={"bg-black py-96 text-center text-white font-squid"}>
+        <div className={"bg-black py-96 text-center text-white"}>
             <img className={"h-12 inline-block"} src={squidEmoji} alt={"squid"}/>
-            <h1 className={"text-3xl mt-4"}>WANNA JOIN THE GAME ANON ?</h1>
+            <h1 className={"text-3xl mt-4 font-squid"}>WANNA JOIN THE GAME ANON ?</h1>
             <Link className={"mt-8 mx-2 p-4 border-2 inline-block"} to={"/home"}>Join</Link>
         </div>
     );
